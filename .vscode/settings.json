@@ -1,7 +1,12 @@
 {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true,
-    }
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": true,
+	},
+	"[html]": {
+		"editor.detectIndentation": false,
+		"editor.tabSize": 2,
+		"editor.insertSpaces": false
+	}
 }

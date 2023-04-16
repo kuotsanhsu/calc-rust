@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="author" content="Jean-Yves Girard" />
+	<style>
+		body {
+			position: relative;
+			/* margin: auto; */
+			width: 600px;
+		}
+
+		p {
+			text-align: justify;
+		}
+
+		h1 {
+			counter-reset: chapter;
+			text-transform: uppercase;
+		}
+
+		h2,
+		h3,
+		h4 {
+			display: list-item;
+		}
+
+		h2 {
+			counter-increment: chapter;
+			counter-reset: section;
+			font-weight: bold;
+		}
+
+		h2::marker {
+			content: counter(chapter, upper-roman) ". ";
+		}
+
+		h3 {
+			counter-increment: section;
+			counter-reset: subsection;
+			margin-left: 2em;
+			font-style: italic;
+		}
+
+		h3::marker {
+			content: counter(chapter, upper-roman) "." counter(section) ". ";
+		}
+
+		h4 {
+			counter-increment: subsection;
+			margin-left: 4em;
+		}
+
+		h4::marker {
+			content: counter(chapter, upper-roman) "." counter(section) "." counter(subsection) ". ";
+		}
+
+		#toc>ol {
+			counter-reset: toc-chapter;
+		}
+
+		#toc>ol>li>ol {
+			counter-reset: toc-section;
+		}
+
+		#toc>ol>li>ol>li>ol {
+			counter-reset: toc-subsection;
+		}
+
+		#toc>ol>li {
+			counter-increment: toc-chapter;
+		}
+
+		#toc>ol>li>ol>li {
+			counter-increment: toc-section;
+		}
+
+		#toc>ol>li>ol>li>ol>li {
+			counter-increment: toc-subsection;
+		}
+
+		#toc>ol>li::marker {
+			content: counter(toc-chapter, upper-roman) ". ";
+		}
+
+		#toc>ol>li>ol>li::marker {
+			content: counter(toc-chapter, upper-roman) "." counter(toc-section) ". ";
+		}
+
+		#toc>ol>li>ol>li>ol>li::marker {
+			content: counter(toc-chapter, upper-roman) "." counter(toc-section) "." counter(toc-subsection) ". ";
+		}
+
+		aside {
+			position: absolute;
+			left: 100%;
+			width: 300px;
+		}
+
+		.author {
+			display: block;
+			font-style: normal;
+		}
+
+		.author .last-name {
+			text-transform: uppercase;
+		}
+
+		p.dedication {
+			text-align: right;
+			font-weight: bold;
+			font-style: italic;
+		}
+
+		.abstract::before {
+			content: "Abstract.";
+			font-weight: bold;
+		}
+
+		figure.quote {
+			margin: 0;
+			text-align: right;
+			font-weight: bold;
+		}
+
+		figure.quote blockquote {
+			margin: 0;
+		}
+
+		figure.quote blockquote p {
+			text-align: right;
+		}
+
+		figure.quote blockquote p::before {
+			content: "\201C";
+		}
+
+		figure.quote blockquote p::after {
+			content: "\201D";
+		}
+
+		figure.quote figcaption {
+			font-style: italic;
+		}
+
+		figure.quote figcaption::before {
+			font-style: normal;
+			content: "(";
+		}
+
+		figure.quote figcaption::after {
+			font-style: normal;
+			content: ")";
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Linear Logic</h1>
+		<aside>
+			<p>
+				Because of its length and novelty this paper has not been subjected to the normal process of refereeing. The
+				editor is prepared to share with the author any criticism that eventually will be expressed concerning this
+				work.
+			</p>
+		</aside>
+
+		<address>
+			<a href="https://girard.perso.math.cnrs.fr/Accueil.html" class="author">Jean-Yves <span
+					class="last-name">Girard</span></a>
+			Équipe de Logique Mathématique, UA 753 du CNRS, UER de Mathématiques, Université de Paris, VII, 75251 Paris,
+			France
+		</address>
+		<p>Communicated by M. Nivat<br>Received October 1986</p>
+		<p class="dedication">A la mémoire de Jean van Heijenoort</p>
+	</header>
+	<p class="abstract">
+		The familiar connective of negation is broken into two operations: linear negation which is the purely negative
+		part of negation and the modality “of course” which has the meaning of a reaffirmation. Following this basic
+		discovery, a completely new approach to the whole area between constructive logics and programmation is initiated.
+	</p>
+
+	<nav id="toc">
+	</nav>
+
+	<figure class="quote">
+		<blockquote>
+			<p>La secrète noirceur du lait &hellip;</p>
+		</blockquote>
+		<figcaption>Jacques Audiberti</figcaption>
+	</figure>
+
+
+	<h2>Introduction and abstract</h2>
+	<p>
+		Linear logic is a logic behind logic, more precisely, it provides a continuation of the constructivization that
+		began with intuitionistic logic. The logic is as strong as the usual ones, i.e., intuitionistic logic can be
+		translated into linear logic in a faithful way. Linear logic shows that the constructive features of intuitionistic
+		operations are indeed dure to the linear aspects of some intuitionistic connectives or quantifiers, and these linear
+		features are put at the prominent place. Linear logic has two semantics:
+	<ol type="i">
+		<li>
+			a Tarskian semantics, the <i>phase semantics</i>, based on the idea that truth makes an angle with reality; this
+			‘angle’ is called a phase, and the connectives are developed according to those operations that are of immediate
+			interest in terms of phases.
+		</li>
+		<li>
+			a Heytingian semantics, the <i>coherent semantics</i>, which is just a cleaning of familiar Scott semantics for
+			intuitionistic operations, followed by the decomposition of the obtained operations into more primitive ones.
+		</li>
+	</ol>
+	</p>
+	<p>
+		The connectives obtianed are
+	<ul type="square">
+		<li>the <i>multiplicatives</i> (⊗, ⅋, ⇒) which are bilinear versions of “and”, “or”, “implies”;</li>
+		<li>the <i>additives</i> (⊕, &) which are linear versions of “or”, “and”;</li>
+		<li>the <i>exponentials</i> (!, ?) which have some similarity with the modals ◻ and ⬦ and which are essential to
+			preserve the logical strength.</li>
+	</ul>
+	</p>
+	<p>
+		All these connectives are dominated by the linear negation (.)<sup>⊥</sup>, which is a constructive and involutive
+		negation; by the way, linear logic works in the classical framework, while being more constructive than
+		intuitionistic logic. The phase sematics is compleete w.r.t. linear <i>sequent calculus</i> which is, roughly
+		speaking, sequent calculus without weakening and contraction. Since the framework is classical, it is necessary, in
+		order to get a decent proof-theoretic structure, to consider <i>proof-nets</i> which are the natural deduction of
+		linear logic; i.e., a system of proofs with multiple conclusions, which works quite well.
+	</p>
+
+
+	<h2>Linear logic explained to a proof-theorist</h2>
+	<h3>The maintenance of space in sequent calculus</h3>
+	<h3>Linear logic as a sequent calculus</h3>
+	<h3>Strength of linear logic</h3>
+	<h3>Subtlety of linear logic</h3>
+	<h3>The semantics of linear: phases</h3>
+	<h2>Linear logic explained to a (theoretical) computer scientist</h2>
+	<h3>The semantics of linear logic: coherent spaces</h3>
+	<h3>Proof-nets: a Glassical natural deduction</h3>
+	<h3>Normalization for proof-nets</h3>
+	<h3>Relevance for computer science</h3>
+	<h4>Questions and answers</h4>
+	<h4>Towards parallelism</h4>
+	<h4>Communication and trips</h4>
+	<h4>Work in progress</h4>
+	<h2>Pons asinorum: from usual implication to linear implication</h2>
+	<h3>Interpretation of functional languages</h3>
+	<h3>The disturbance</h3>
+	<h3>The decomposition</h3>
+	<h3>Further questions</h3>
+	<h2>The phase semantics</h2>
+	<h2>Proof-nets</h2>
+	<h3>The concept of trip</h3>
+	<h3>The cut rule</h3>
+	<h3>Cut elimination</h3>
+	<h3>Thesystem PN1</h3>
+	<h3>Thesystem PN2</h3>
+	<h3>Discussion</h3>
+	<h2>Coherent semantics</h2>
+	<h2>Normalization in PN2</h2>
+	<h3>Axiom contraction</h3>
+	<h3>Symmetric contractions</h3>
+	<h3>Commutative contractions</h3>
+	<h2>Some useful translations</h2>
+	<h3>The translation of intuitionistic logic</h3>
+	<h3>The translation of the system F</h3>
+	<h4>Types</h4>
+	<h4>Translation of terms</h4>
+	<h4>Semantic soundness of the translation</h4>
+	<h4>Syntactic soundness of the translation</h4>
+	<h3>The translation of current data in PN2</h3>
+	<h4>Booleans</h4>
+	<h4>Integers</h4>
+	<h4>Lists, trees</h4>
+	<h3>Interpretation of classical logic</h3>
+	<h3>Translation of cut-free classical logic</h3>
+	<h3>The Approximation Theorem</h3>
+	<h2>Work in progress: slices</h2>
+	<h2>Two years of linear logic: selection from the garbage collector</h2>
+	<h3>The first glimpses</h3>
+	<h3>The quantitative attempt</h3>
+	<h3>The intuitionistic attempt</h3>
+	<h3>Recent developments</h3>
+	<h3>The exponentials</h3>
+	<h2>Acknowledgment</h2>
+	<h2>References</h2>
+
+	<script>
+		/**
+		 * @param headings {IterableIterator<HTMLHeadingElement>}
+		 * @param tagName {string}
+		 * @param [initialElement] {HTMLHeadingElement}
+		 * @param levels {number[]}
+		 * @returns {{ol: HTMLOListElement, nextHeading?: HTMLHeadingElement}}
+		 */
+		function createOL(headings, tagName, initialElement, levels) {
+			const ol = document.createElement("ol");
+			for (let /** @type {HTMLLIElement} */prevLI; ;) {
+				let h = initialElement;
+				if (!h) {
+					const headingIter = headings.next();
+					if (headingIter.done) {
+						break;
+					}
+					h = headingIter.value;
+				}
+				if (h.tagName < tagName) {
+					initialElement = h;
+					break;
+				} if (h.tagName > tagName) {
+					levels.push(0);
+					const { ol, nextHeading } = createOL(headings, h.tagName, h, levels);
+					levels.pop();
+
+					prevLI.append(ol);
+					initialElement = nextHeading;
+				} else {
+					levels[levels.length - 1] += 1;
+					h.id = levels.join("-");
+
+					const a = document.createElement("a");
+					a.href = `#${h.id}`;
+					a.textContent = h.textContent;
+					const li = document.createElement("li");
+					li.append(a);
+					ol.append(li);
+					prevLI = li;
+					initialElement = undefined;
+				}
+			}
+			return { ol, nextHeading: initialElement };
+		}
+
+		/**
+		 * @param headings {IterableIterator<HTMLHeadingElement>}
+		 * @returns {HTMLOListElement}
+		 */
+		function createTOC(headings) {
+			return createOL(headings, "H2", undefined, [0]).ol;
+		}
+
+		/** @type {IterableIterator<HTMLHeadingElement>} */
+		const headings = document.querySelectorAll("h2,h3,h4").values();
+		document.getElementById("toc").append(createTOC(headings));
+	</script>
+</body>
+
+</html>
